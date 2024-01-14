@@ -1,6 +1,6 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 const app: Application = express();
 
 // using cors
@@ -11,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
+  // interface------------------------------------->
   interface IUser {
     id: string;
     role: "student";
@@ -28,6 +29,7 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
     presentAddress: string;
     permanentAddress: string;
   }
+  // schema---------------------------------------->
   const userSchema = new Schema<IUser>({
     id: { type: String, required: true, unique: true },
     role: { type: String, required: true },
@@ -45,6 +47,31 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
     presentAddress: { type: String, required: true },
     permanentAddress: { type: String, required: true },
   });
+  // model------------------------------------------>
+  const User = model<IUser>("User", userSchema);
+  const createUserToDB = async () => {
+    const user = new User({
+      id: "005",
+      role: "next-level",
+      password: "bond007",
+      name: {
+        firstName: "mr",
+        middleName: "john",
+        lastName: "doe",
+      },
+      dataOfBirth: "27-03-2002",
+      gender: "male",
+      email: "www.john@doe.com",
+      contactNumber: "0176546546546",
+      emergencyContactNumber: "01935465465465",
+      presentAddress: "nalta",
+      permanentAddress: "nalta",
+    });
+    await user.save();
+    console.log(user);
+    res.send(user);
+  };
+  createUserToDB();
 });
 
 export default app;
