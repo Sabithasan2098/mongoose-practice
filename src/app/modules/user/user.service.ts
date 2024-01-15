@@ -12,3 +12,10 @@ export const getUsersFromDB = async () => {
   const findAllUser = await User.find();
   return findAllUser;
 };
+
+export const getUserByIdFromDB = async (
+  payload: string
+): Promise<IUser | null> => {
+  const findUser = await User.findOne({ id: payload }, { name: 1 });
+  return findUser;
+};
