@@ -5,6 +5,7 @@ export const createUserToDB = async (payload: IUser): Promise<IUser> => {
   const user = await new User(payload);
   await user.save();
   console.log(user);
+  console.log(user.fullName()); //custom instance static method
   return user;
 };
 

@@ -1,7 +1,12 @@
-import { Schema, model } from "mongoose";
-import { IUser } from "./user.interface";
+import { Model, Schema, model } from "mongoose";
+import { IUser, IUserMethods } from "./user.interface";
 
-export const userSchema = new Schema<IUser>({
+// built-in instance static method------------------------------------->
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+// -----------------------------------------------------------//
+
+export const userSchema = new Schema<IUser, UserModel, IUserMethods>({
   id: { type: String, required: true, unique: true },
   role: { type: String, required: true },
   password: { type: String, required: true },
@@ -18,7 +23,14 @@ export const userSchema = new Schema<IUser>({
   presentAddress: { type: String, required: true },
   permanentAddress: { type: String, required: true },
 });
+
+// built-in instance static method-------------------------------------------->
+userSchema.method("fullName", function fullName() {
+  return this.name.firstName + "" + this.name.lastName;
+});
+
+// -----------------------------------------------------------------//
 // model------------------------------------------>
-const User = model<IUser>("User", userSchema);
+const User = model<IUser, UserModel>("User", userSchema); //instance static method=>{UserModel}
 
 export default User;
