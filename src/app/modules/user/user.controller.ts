@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
   createUserToDB,
+  getAdminUserDB,
   getUserByIdFromDB,
   getUsersFromDB,
 } from "./user.service";
@@ -38,6 +39,20 @@ export const getUserById = async (
 ): Promise<IUser | null> => {
   const { id } = req.params;
   const user = await getUserByIdFromDB(id);
+  res.status(200).json({
+    status: "success",
+    data: user,
+  });
+  return user;
+};
+
+// static-method----------------------------->
+export const getAdminUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<IUser | null> => {
+  const user = await getAdminUserDB();
   res.status(200).json({
     status: "success",
     data: user,
